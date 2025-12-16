@@ -10,7 +10,6 @@ Build a multi-VM environment where I can practice both attack and defense
 - Ubuntu Server (Web services target)
 - Rocky Linux 9 (Hardening practice target)
 
-**Network:** 192.168.122.0/24 (libvirt default network)
 
 ---
 
