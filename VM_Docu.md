@@ -11,8 +11,8 @@ seemed to work until I switched to version 9 Rocky Linux and to UTM as
 my manager. The boot worked then but not the display, so I settled for a
 headless system.
 
-Kali Linux on CachyOS Host Machine With Qemu Kali *Linux on my host,
-CachyOS with Qemu*
+**Kali Linux on CachyOS Host Machine With Qemu Kali *Linux on my host,
+CachyOS with Qemu**
 
 For the next VM set up, I have more information. My host machine is
 CachyOS, an Arch distribution. I wanted to install Kali through the
