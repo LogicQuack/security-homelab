@@ -4,9 +4,7 @@
 UTM*
 
 > Initially I wanted to set up Rocky Linux on my Macbook Air. I used
-> version
-
-8 with virtualbox as my manager. Yet, it did not work. The ISO was not
+version 8 with virtualbox as my manager. Yet, it did not work. The ISO was not
 recognized when trying to boot the operating system, and the display
 output was not working either. After various attempts at fixing, nothing
 seemed to work until I switched to version 9 Rocky Linux and to UTM as
