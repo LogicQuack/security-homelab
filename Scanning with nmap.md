@@ -25,7 +25,7 @@ Vulnerabilites found: It couldn't seem to find any vulnerabilities including DOM
 ### Learnings
 - familiarity with nmap
 - -p- scans all ports on target host
-- -A  enables an aggressive scan that constitues OS version, version detection, traceroute, and script scanning
+- -A  enables an aggressive scan that constitutes OS version, version detection, traceroute, and script scanning
 - --script vuln executes scripting engine under "vuln" to find any vulnerabilities on the system
 
 ### Link(s)
