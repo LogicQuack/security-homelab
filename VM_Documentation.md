@@ -1,7 +1,7 @@
-**VM Documentation**
+## VM Documentation
 
->*Section 1: VM Set up (December 2025) Rocky Linux on Macbook Air With
-UTM*
+>**Section 1: VM Set up (December 2025) Rocky Linux on Macbook Air With
+UTM**
 
   Initially I wanted to set up Rocky Linux on my Macbook Air. I used
 version 8 with virtualbox as my manager. Yet, it did not work. The ISO was not
@@ -128,9 +128,9 @@ account, and ran an update with
 
 >"sudo apt update && sudo apt upgrade -y."
 
->*Section 2: Initial Network Testing and Constructing*
+>**Section 2: Initial Network Testing and Constructing**
 
-*Apache and SSH (12-15-2025)*
+>*Apache and SSH (12-15-2025)*
 
 First, after getting into the freshly updated ubuntu machine, I
 installed the Apache server with
@@ -166,3 +166,23 @@ After that, I checked the open ports with
 ssh because it specified the port. "--sV" is more for services in general.
 Thus, the open ports are 22 (SSH) and 80 (HTTP w/ Apache), and they are
 vulnerable for my Kali to exploit.
+
+>*Nmap Scanning 12-17-25*
+
+I ran a full port scan, an aggressive scan, and a vulnerability scan from my Kali machine at my Ubuntu Server. For the full port scan, I ran
+
+>nmap -p- 192.168.122.209
+
+However, before that, I mistakenly did not have my other machine on, so it failed to retrieve anything of note. And then I included the IP address with the CIDR notation which scanned more than the target it seems. I realized my folly and corrected to the above command. 
+
+After the port scan, I then ran an aggressive scan with
+
+>nmap -A 192.168.122.209
+
+which resulted in OS version, version detection of kernals and the routerOS, SSH keys, the server (it being Apache2), and tracerouting of one hop. It guessed Ubuntu Linux as the OS. 
+
+I finally ran a vulnerability scan with
+
+>nmap --script vuln 192.168.122.209
+
+No vulnerabilites were detected including DOM based XSS, CSRF, and stored XSS.
