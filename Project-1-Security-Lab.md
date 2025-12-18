@@ -98,8 +98,10 @@ PORT   STATE SERVICE VERSION
 
 ---
 
+## Current Progress: 
+- **finished exercise 1, see "scanning with nmap" for details**
+
 ## Next Steps
-- [ ] Perform deeper port scan (all 65535 ports)
 - [ ] Test HTTP service with curl/browser
 - [ ] Install vulnerable web application (DVWA)
 - [ ] Configure SSH key authentication
