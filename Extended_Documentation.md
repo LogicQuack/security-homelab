@@ -1,4 +1,4 @@
-## VM Documentation
+## Extended Documentation
 
 >**Section 1: VM Set up (December 2025) Rocky Linux on Macbook Air With
 UTM**
