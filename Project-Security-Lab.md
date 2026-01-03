@@ -1,4 +1,4 @@
-# Project 1: Multi-VM Security Lab Environment
+# Project: Multi-VM Security Lab Environment
 
 ## Objective
 Build a multi-VM environment where I can practice both attack and defense 
