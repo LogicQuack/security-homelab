@@ -93,7 +93,7 @@ PORT   STATE SERVICE VERSION
 - **Virtualization:** QEMU/KVM, virt-manager, UTM
 - **Operating Systems:** Kali Linux, Ubuntu Server, Rocky Linux
 - **Networking:** libvirt, iptables, nmcli
-- **Security Tools:** Nmap
+- **Security Tools:** Nmap, DVWA
 - **Services:** Apache2, OpenSSH
 
 ---
@@ -102,9 +102,8 @@ PORT   STATE SERVICE VERSION
 - **finished exercise 1, see "scanning with nmap" for details**
 
 ## Next Steps
-- [ ] Test HTTP service with curl/browser
 - [ ] Install vulnerable web application (DVWA)
-- [ ] Configure SSH key authentication
+- [ ] Attack Weak DVWA environment
 - [ ] Set up basic firewall rules on Ubuntu
 - [ ] Document attack surface analysis
 
