@@ -130,7 +130,7 @@ account, and ran an update with
 
 >**Section 2: Initial Network Testing and Constructing**
 
-*Apache and SSH (12-15-2025)*
+>*Apache and SSH (12-15-2025)*
 
 First, after getting into the freshly updated ubuntu machine, I
 installed the Apache server with
@@ -186,3 +186,87 @@ I finally ran a vulnerability scan with
 >nmap --script vuln 192.168.122.209
 
 No vulnerabilites were detected including DOM based XSS, CSRF, and stored XSS.
+
+>**Section 3: DVWA Set Up
+
+The next task I deemed worthy was creating a vulnerable environment from my Ubuntu with Damn Vulnerable Web Application (DVWA). To do so, I needed a programming language, a web server, a database, and a means to getting the application off github. The language was PHP becuase DVWA is built with it, the web server was the familiar Apache which I put in the code to install despite already having it, the database was MYSQL, and the vector for retrieving DVWA was Git. 
+
+First I ran an update and downloaded the neccesseties with
+
+>sudo apt update
+>
+>sudo apt install -y apache2 mysql-server php php-mysqli php-gd libapache2-mod-php git
+
+I then entered Apache's root directory, retrieved DVWA with Git, and moved into a new DVWA file. This was all with these three commands:
+
+>cd /var/www/html
+>
+>sudo git clone https://github.com/digininja/DVWA.git
+>
+>cd DVWA
+
+Next, I copied the config file, so I could start putting in actual configurations based on the template in that copy.
+
+>sudo cp config/config.inc.php.dist config/config.inc.php
+
+>*Configuring MYSQL*
+
+The subsequent steps ended up with a few issues that I will get to. First, I went to configure MYSQL with
+
+>sudo mysql
+
+Then, in the MYSQL prompt that showed up, I put in these commands one by one:
+
+>CREATE DATABASE dvwa;
+>
+>CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa';
+>
+>GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+>
+>FLUSH PRIVILEGES;
+>
+>EXIT;
+
+Afterward, I set permissions of the /var/www/html/DVWA file I was working with.
+
+>sudo chown -R www-data:www-data /var/www/html/DVWA
+>
+>sudo chmod -R 755 /var/www/html/DVWA
+
+This included making some internal folders writable with
+
+>sudo chmod 666 /var/www/html/DVWA/hackable/uploads/
+>
+>sudo chmod 666 /var/www/html/DVWA/config/config.inc.php
+
+After that, I restarted Apache using
+
+>sudo systemctl restart apache2
+
+>*Accessing DVWA and Troubleshooting*
+
+This is when I switched to my Kali Linux to access DVWA (being locally hosted on the Ubuntu) through firefox. I just threw this in the browser "http://192.168.122.209/DVWA/setup.php", and it worked. However, when I went to create the database, I recieved a 500 internal error. My troubleshooting began with the Apache logs using
+
+>sudo tail -30 /var/log/apache2/error.log
+
+This revealed a syntax error with PHP. While I could and should have just gone from there, I likely did a few things that I maybe did not need to. I first tested if PHP was working with 
+
+>echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/test.php
+
+I accessed "http://192.168.122.209/test.php" from my Kali to verify, and it was indeed working. I then checked permissions of the file I was working in through
+
+>ls -la /var/www/html/DVWA/setup.php
+
+There was no issue there either. After that, I checked if Apache and MYSQL were working with the systemctl status command:
+
+>sudo systemctl status apache2
+>
+>sudo systemctl status mysql
+
+They were both running. From there, I tried pulling from a different source that offered DVWA and resseting the database. Finally, I just deleted MYSQL and got Mariadb instead, an alternate database option. I did this with
+
+>sudo apt remove mysql-server -y
+>
+>sudo apt install mariadb-server -y
+
+Then, I just recreated the database, and I was finally able to create a DVWA environment. I logged in, and set the DVWA security to low as a prime target to attack. To verify if it was working fine, I tried a SQL injection test with inputting "1' OR '1'='1" into a USER ID field which resulted in multiple users. This was the validation I needed. 
