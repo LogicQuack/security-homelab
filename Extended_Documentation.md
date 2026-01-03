@@ -1,7 +1,6 @@
 ## Extended Documentation
 
->**Section 1: VM Set up (December 2025) Rocky Linux on Macbook Air With
-UTM**
+### Section 1: VM Set up (December 2025) Rocky Linux on Macbook Air With UTM
 
   Initially I wanted to set up Rocky Linux on my Macbook Air. I used
 version 8 with virtualbox as my manager. Yet, it did not work. The ISO was not
@@ -11,7 +10,7 @@ seemed to work until I switched to version 9 Rocky Linux and to UTM as
 my manager. The boot worked then but not the display, so I settled for a
 headless system.
 
->*Kali Linux on CachyOS Host Machine With Qemu*
+#### Kali Linux on CachyOS Host Machine With Qemu
 
   For the next VM set up, I have more information. My host machine is
 CachyOS, an Arch distribution. I wanted to install Kali through the
@@ -118,7 +117,7 @@ I then changed the password with
 
 >"passwd."
 
->*Ubuntu Linux with Qemu (12-15-2025)*
+#### Ubuntu Linux with Qemu (12-15-2025)
 
 Fortunately, in contrary to the previous installations, there were no
 issues. I did add a USB device which messed up the internet briefly, but
@@ -128,9 +127,9 @@ account, and ran an update with
 
 >"sudo apt update && sudo apt upgrade -y."
 
->**Section 2: Initial Network Testing and Constructing**
+### Section 2: Initial Network Testing and Constructing
 
->*Apache and SSH (12-15-2025)*
+#### Apache and SSH (12-15-2025)
 
 First, after getting into the freshly updated ubuntu machine, I
 installed the Apache server with
@@ -167,7 +166,7 @@ ssh because it specified the port. "--sV" is more for services in general.
 Thus, the open ports are 22 (SSH) and 80 (HTTP w/ Apache), and they are
 vulnerable for my Kali to exploit.
 
->*Nmap Scanning 12-17-25*
+#### Nmap Scanning 12-17-25
 
 I ran a full port scan, an aggressive scan, and a vulnerability scan from my Kali machine at my Ubuntu Server. For the full port scan, I ran
 
@@ -187,9 +186,11 @@ I finally ran a vulnerability scan with
 
 No vulnerabilites were detected including DOM based XSS, CSRF, and stored XSS.
 
-**Section 3: DVWA Set Up (1/1/26 at time of process | 1/2/26 for documentation)**
+### Section 3: DVWA Set Up (1/1/26 at time of process | 1/2/26 for documentation)
 
 The next task I deemed worthy was creating a vulnerable environment from my Ubuntu with Damn Vulnerable Web Application (DVWA). To do so, I needed a programming language, a web server, a database, and a means to getting the application off github. The language was PHP becuase DVWA is built with it, the web server was the familiar Apache which I put in the code to install despite already having it, the database was MYSQL, and the vector for retrieving DVWA was Git. 
+
+#### Preperation
 
 First I ran an update and downloaded the neccesseties with
 
@@ -209,7 +210,7 @@ Next, I copied the config file, so I could start putting in actual configuration
 
 >sudo cp config/config.inc.php.dist config/config.inc.php
 
->*Configuring MYSQL*
+#### Configuring MYSQL
 
 The subsequent steps ended up with a few issues that I will get to. First, I went to configure MYSQL with
 
@@ -243,7 +244,7 @@ After that, I restarted Apache using
 
 >sudo systemctl restart apache2
 
->*Accessing DVWA and Troubleshooting*
+#### Accessing DVWA and Troubleshooting
 
 This is when I switched to my Kali Linux to access DVWA (being locally hosted on the Ubuntu) through firefox. I just threw this in the browser "http://192.168.122.209/DVWA/setup.php", and it worked. However, when I went to create the database, I recieved a 500 internal error. My troubleshooting began with the Apache logs using
 
