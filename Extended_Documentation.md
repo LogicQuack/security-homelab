@@ -263,7 +263,7 @@ There was no issue there either. After that, I checked if Apache and MYSQL were 
 >
 >sudo systemctl status mysql
 
-They were both running. From there, I tried pulling from a different source that offered DVWA and resseting the database. Finally, I just deleted MYSQL and got Mariadb instead, an alternate database option. I did this with
+They were both running. From there, I tried pulling from a different source that offered DVWA and resetting the database. Finally, I just deleted MYSQL and got Mariadb instead, an alternate database option. I did this with
 
 >sudo apt remove mysql-server -y
 >
