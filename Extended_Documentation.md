@@ -187,7 +187,7 @@ I finally ran a vulnerability scan with
 
 No vulnerabilites were detected including DOM based XSS, CSRF, and stored XSS.
 
-**Section 3: DVWA Set Up**
+**Section 3: DVWA Set Up (1/1/26 at time of process | 1/2/26 for documentation)**
 
 The next task I deemed worthy was creating a vulnerable environment from my Ubuntu with Damn Vulnerable Web Application (DVWA). To do so, I needed a programming language, a web server, a database, and a means to getting the application off github. The language was PHP becuase DVWA is built with it, the web server was the familiar Apache which I put in the code to install despite already having it, the database was MYSQL, and the vector for retrieving DVWA was Git. 
 
