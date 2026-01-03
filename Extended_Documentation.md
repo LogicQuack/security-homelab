@@ -130,7 +130,7 @@ account, and ran an update with
 
 >**Section 2: Initial Network Testing and Constructing**
 
->*Apache and SSH (12-15-2025)*
+*Apache and SSH (12-15-2025)*
 
 First, after getting into the freshly updated ubuntu machine, I
 installed the Apache server with
