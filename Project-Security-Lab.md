@@ -77,9 +77,6 @@ PORT   STATE SERVICE VERSION
 - Both services using default ports
 - No firewall rules blocking access
 
-**Personal Learning:**
-- differentiation between specific port scanning with -p and -sV
-
 ---
 
 ## Skills Demonstrated
@@ -102,10 +99,7 @@ PORT   STATE SERVICE VERSION
 - **finished exercise 1, see "scanning with nmap" for details**
 
 ## Next Steps
-- [ ] Install vulnerable web application (DVWA)
-- [ ] Attack Weak DVWA environment
-- [ ] Set up basic firewall rules on Ubuntu
-- [ ] Document attack surface analysis
+- Vulnerability Report (GRC focus)
 
 ---
 
