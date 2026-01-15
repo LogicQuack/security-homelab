@@ -24,98 +24,133 @@ worked and I was able to get into the desktop after logging in.
 I ran into a subsequent problem of it not connecting to the internet. My
 test was
 
->"ping -c 4 google.com."
+```Bash
+ping -c 4 google.com
+```
 
 I checked my NIC settings, but they were fine. I then ran 
 
->"sudo systemctl restart libvirtd"
+```Bash
+sudo systemctl restart libvirtd
+```
 
 on my host machine to restart the virtualization service. That didn't
 fix it either. I then checked if the device even exists with
 
->"ip a show virbr0."
+```Bash
+ip a show virbr0
+```
 
 Only the loopback address was shown. In Kali, I then identified any IP
 addresses with
 
->"ip a"
+```Bash
+ip a
+```
 
 but there were none. The interface name was "eth0" While still in Kali, I then used the Network Manager Command Line
 Interface (nmcli). I found the active name of the connection through it
 with
 
->"nmcli con show."
+```Bash
+nmcli con show
+```
 
 The target is called "Wired connection 1." I forced this connection down
 and back up with
 
->"sudo nmcli con up "Wired connection 1.\""
+```Bash
+sudo nmcli con up "Wired connection 1.\"
+```
 
 But the connection failed. Thus, I had to use nano to bypass the network
 manager to get DHCP to send an IP address. I went to the network
 configuration file with 
 
->"sudo nano /etc/network/interfaces."
+```Bash
+sudo nano /etc/network/interfaces.
+```
 
 In the file, I wrote in
 
->"auto eth0" and "iface eth0 inet dhcp."
+```Bash
+auto eth0" and "iface eth0 inet dhcp.
+```
 
 Notice the same interface name as before. Afterward, I stopped the
 network manager with
 
->"sudo systemctl stop NetworkManager,"
+```Bash
+sudo systemctl stop NetworkManager,
+```
 
 and I restarted the legacy network service to load the configuration I
 made with 
 
->"sudo systemctl restart networking."
+```Bash
+sudo systemctl restart networking.
+```
 
 The result was an IP address in the 169.254 range which indicates
 failure to receive one. I then shut down the Kali VM, and destroyed the
 virtual network with
 
->"sudo virsh net-destroy default."
+```Bashsudo virsh net-destroy default
+```
 
 I unloaded the required kernel modules with 
 
->"sudo modprobe -r nf_nat_ftp nf_conntrack_ftp sudo modprobe -r bridge."
+```Bash
+sudo modprobe -r nf_nat_ftp nf_conntrack_ftp sudo modprobe -r bridge
+```
 
 I reloaded the libvert service with 
 
->"sudo systemctl restart libvirtd."
+```Bash
+sudo systemctl restart libvirtd
+```
 
 Finally, I started the virtual network, rebuilding the virbr0 bridge with 
 
->"sudo virsh net-start default
->
->sudo virsh net-autostart default."
+```Bash
+sudo virsh net-start default
+sudo virsh net-autostart default
+```
 
 Yet, the internet still did not connect. So, in my host machine, I
 edited a configuration file by doing
 
->"sudo nano /etc/libvirt/network.conf,"
+```Bash
+sudo nano /etc/libvirt/network.conf
+```
 
 and I changed the firewall backend to "iptables" instead of "nftables,"
 uncommenting it. The line looked like
 
->"firewall_backend = "iptables"
+```Bash
+firewall_backend = "iptables"
+```
 
 I then restarted libvertd in order to make it acknowledge my
 configurations and rebuild firewall rules around iptables with
 
->"sudo systemctl restart libvirtd."
+```Bash
+sudo systemctl restart libvirtd
+```
 
 This time, the internet connection finally occurred.
 From there, I updated the system, 
 
->"sudo apt update
->
->sudo apt full-upgrade -y."
+```Bash
+sudo apt update
+sudo apt full-upgrade -y
+```
 
 I then changed the password with 
 
->"passwd."
+```bash
+passwd
+```
 
 #### Ubuntu Linux with Qemu (12-15-2025)
 
@@ -125,7 +160,9 @@ I realized I shouldn't have done so despite my internet being possible
 via a NIC USB. After that, I went through the installer GUI, set up my
 account, and ran an update with
 
->"sudo apt update && sudo apt upgrade -y."
+```Bash
+sudo apt update && sudo apt upgrade -y
+```
 
 ### Section 2: Initial Network Testing and Constructing
 
@@ -134,32 +171,46 @@ account, and ran an update with
 First, after getting into the freshly updated ubuntu machine, I
 installed the Apache server with
 
->"sudo apt install apache2 -y."
+```Bash
+sudo apt install apache2 -y
+```
 
 I then installed ssh with
 
->"sudo apt install openssh-server -y"
+```Bash
+sudo apt install openssh-server -y
+```
 
 And checked the status with 
 
->"sudo systemctl status ssh."
+```Bash
+sudo systemctl status ssh
+```
 
 I also verified if it was listening with 
 
->"sudo ss -tulpn | grep :22"
+```Bash
+sudo ss -tulpn | grep :22
+```
 
 Afterwards, I got my IP with 
 
->"ip a,"
+```Bash
+ip a
+```
 
 and I used that to check port status. First though, I installed nmap
 with 
 
->"sudo apt install nmap -y."
+```Bash
+sudo apt install nmap -y
+```
 
 After that, I checked the open ports with 
 
->"nmap -sV 192.168.122.209/24"
+```Bash
+nmap -sV 192.168.122.209/24
+```
 
   Initially, I had used the flag "--p 22" instead of "--sV," which only showed
 ssh because it specified the port. "--sV" is more for services in general.
@@ -170,19 +221,25 @@ vulnerable for my Kali to exploit.
 
 I ran a full port scan, an aggressive scan, and a vulnerability scan from my Kali machine at my Ubuntu Server. For the full port scan, I ran
 
->nmap -p- 192.168.122.209
+```Bash
+nmap -p- 192.168.122.209
+```
 
 However, before that, I mistakenly did not have my other machine on, so it failed to retrieve anything of note. And then I included the IP address with the CIDR notation which scanned more than the target it seems. I realized my folly and corrected to the above command. 
 
 After the port scan, I then ran an aggressive scan with
 
->nmap -A 192.168.122.209
+```Bash
+nmap -A 192.168.122.209
+```
 
 which resulted in OS version, version detection of kernals and the routerOS, SSH keys, the server (it being Apache2), and tracerouting of one hop. It guessed Ubuntu Linux as the OS. 
 
 I finally ran a vulnerability scan with
 
->nmap --script vuln 192.168.122.209
+```Bash
+nmap --script vuln 192.168.122.209
+```
 
 No vulnerabilites were detected including DOM based XSS, CSRF, and stored XSS.
 
@@ -194,80 +251,140 @@ The next task I deemed worthy was creating a vulnerable environment from my Ubun
 
 First I ran an update and downloaded the neccesseties with
 
->sudo apt update
->
->sudo apt install -y apache2 mysql-server php php-mysqli php-gd libapache2-mod-php git
+```Bash
+sudo apt update
+sudo apt install -y apache2 mysql-server php php-mysqli php-gd libapache2-mod-php git
+```
 
 I then entered Apache's root directory, retrieved DVWA with Git, and moved into a new DVWA file. This was all with these three commands:
 
->cd /var/www/html
->
->sudo git clone https://github.com/digininja/DVWA.git
->
->cd DVWA
+```Bash
+cd /var/www/html
+sudo git clone https://github.com/digininja/DVWA.git
+cd DVWA
+```
 
 Next, I copied the config file, so I could start putting in actual configurations based on the template in that copy.
 
->sudo cp config/config.inc.php.dist config/config.inc.php
+```Bash
+sudo cp config/config.inc.php.dist config/config.inc.php
+```
 
 #### Configuring MYSQL
 
 The subsequent steps ended up with a few issues that I will get to. First, I went to configure MYSQL with
 
->sudo mysql
+```Bash
+sudo mysql
+```
 
 Then, in the MYSQL prompt that showed up, I put in these commands one by one:
 
->CREATE DATABASE dvwa;
->
->CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa';
->
->GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
->
->FLUSH PRIVILEGES;
->
->EXIT;
+```Bash
+CREATE DATABASE dvwa;
+CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'dvwa';
+GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
 
 Afterward, I set permissions of the /var/www/html/DVWA file I was working with.
 
->sudo chown -R www-data:www-data /var/www/html/DVWA
->
->sudo chmod -R 755 /var/www/html/DVWA
+```Bash
+sudo chown -R www-data:www-data /var/www/html/DVWA
+sudo chmod -R 755 /var/www/html/DVWA
+```
 
 This included making some internal folders writable with
 
->sudo chmod 666 /var/www/html/DVWA/hackable/uploads/
->
->sudo chmod 666 /var/www/html/DVWA/config/config.inc.php
+```Bash
+sudo chmod 666 /var/www/html/DVWA/hackable/uploads/
+sudo chmod 666 /var/www/html/DVWA/config/config.inc.php
 
 After that, I restarted Apache using
 
->sudo systemctl restart apache2
+```Bash
+sudo systemctl restart apache2
+```
 
 #### Accessing DVWA and Troubleshooting
 
 This is when I switched to my Kali Linux to access DVWA (being locally hosted on the Ubuntu) through firefox. I just threw this in the browser "http://192.168.122.209/DVWA/setup.php", and it worked. However, when I went to create the database, I recieved a 500 internal error. My troubleshooting began with the Apache logs using
 
->sudo tail -30 /var/log/apache2/error.log
+```Bash
+sudo tail -30 /var/log/apache2/error.log
+```
 
 This revealed a syntax error with PHP. While I could and should have just gone from there, I likely did a few things that I maybe did not need to. I first tested if PHP was working with 
 
->echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/test.php
+```Bash
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/test.php
+```
 
 I accessed "http://192.168.122.209/test.php" from my Kali to verify, and it was indeed working. I then checked permissions of the file I was working in through
 
->ls -la /var/www/html/DVWA/setup.php
+```Bash
+ls -la /var/www/html/DVWA/setup.php
+```
 
 There was no issue there either. After that, I checked if Apache and MYSQL were working with the systemctl status command:
 
->sudo systemctl status apache2
->
->sudo systemctl status mysql
+```Bash
+sudo systemctl status apache2
+sudo systemctl status mysql
+```
 
 They were both running. From there, I tried pulling from a different source that offered DVWA and resetting the database. Finally, I just deleted MYSQL and got Mariadb instead, an alternate database option. I did this with
 
->sudo apt remove mysql-server -y
->
->sudo apt install mariadb-server -y
+```Bash
+sudo apt remove mysql-server -y
+sudo apt install mariadb-server -y
+```
 
 Then, I just recreated the database, and I was finally able to create a DVWA environment. I logged in, and set the DVWA security to low as a prime target to attack. To verify if it was working fine, I tried a SQL injection test with inputting "1' OR '1'='1" into a USER ID field which resulted in multiple users. This was the validation I needed. 
+
+### Section 4: DVWA Exploitation (1/15/26 at time of process and documentation)
+
+Now that I had created the DVWA environment and tested that it was in working order, it was time to exploit. I attacked via the same SQL injection at the end of the last section, through reflected XSS, and throough command injections.
+
+#### SQL Injection
+
+Like last time, I entered the following command in the user ID field:
+
+```Bash
+1' OR '1'='1
+```
+
+It returned names and surnames pulled from the DVWA database.
+
+#### Reflected XSS Manipulation
+
+Next, I did the reflected XSS manipulation. The first was a simple vulnerability alert with:
+
+```Bash
+<script>alert('XSS Vulnerability Found')</script>
+```
+It recieved the alert, meaning it worked. Next, I accessed session cookies with:
+
+```Bash
+<script>alert(document.cookie)</script>
+```
+
+I retrieved the level of security as well as the PHPSESSIONID. The final XSS test was for redirection to a malicious site with
+
+```Bash
+<script>alert('Redirecting to malicious site...')</script>
+```
+#### Command Injection
+
+For this, I pinged the loopback address of the Ubuntu and susbequently used various commands to access files and account information. These commands include:
+
+```Bash
+127.0.0.1; whoami
+127.0.0.1; ls -la
+127.0.0.1; cat /etc/passwd
+127.0.0.1; id
+127.0.0.1; pwd
+```
+
+"whoami" displays the user which is www-data. "ls -la" lists all the contents of a directory including hidden with extended details like permissions, user, date, size, etc. "cat /etc/passwd" displays user account information. "id" shows the UID, group id, and gid all as 33. finally, "pwd" presents the file path (the /var...).
