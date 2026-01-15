@@ -5,6 +5,6 @@ This is the tracking of my cybersecurity focused home lab process. I will be eng
 
 >Check **Project-Security-Lab** for details about the environment, and check **(1)Scanning with nmap** for the first exercise.
 >
->**A Set Up for DVWA is now ready in (2)DVWA** as my second exercise
+>**An exploitation using DVWA is now ready in (3)DVWA_Exploitation** as my third exercise
 
 >You can also check **Extended_Documentation** for often more detailed processes including mistakes and errors. 
